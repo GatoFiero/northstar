@@ -1,0 +1,3 @@
+interface:
+  display_name: "Northstar: Plan the Architecture"
+  short_description: "Record architecture decisions before implementation"

@@ -1,6 +1,6 @@
 # Bug Backlog
 
-Broken behavior found while using the app. Add with `/bug-report`, or by hand using the format below. Fix with `/squash`, which turns a batch of bugs into a spec for `/imp`.
+This is the default file backlog. If your project tracks bugs elsewhere, replace this template with a link to the authoritative tracker. For a file backlog, use `bug-report` to capture broken behavior and `squash` to prepare a fix spec for `imp`.
 
 Not a bug: working-but-wrong code (tech debt → master.md Maintenance) or new behavior (feature → a roadmap step).
 

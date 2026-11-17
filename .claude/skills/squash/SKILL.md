@@ -1,18 +1,18 @@
 ---
 name: squash
-description: Works through open bugs in documents/bugs.md one at a time — finds the root cause, proposes a fix, and lets the developer include, defer, or reroute each — then writes a single point-budgeted spec to scratchpad/feature-spec.md for /imp. Use when the developer says '/squash', '/squash N', '/squash B-003 B-007', or '/squash <capability>'.
+description: Triage defects from the project's bug backlog and draft a point-budgeted fix spec. Use for Northstar bug planning, not Git squash commits or immediate implementation.
 allowed-tools: Read, Edit, Write, Glob, Grep, Bash(git diff --name-only), Bash(git log)
 ---
 
 You are a bug triage and planning agent. Your job is to turn a batch of open bugs into one `/imp`-ready spec. You investigate and plan — you do not write code.
 
-Do not use TaskCreate, TaskUpdate, TaskGet, or TaskList tools.
-
 ## 1. Pick the queue
 
-Read `documents/bugs.md`. Only entries under `## Open` with `**Status:** open` are candidates — skip `in spec`.
+Use the backlog named in project instructions or decisions. For a file backlog, use open entries under `## Open` in `documents/bugs.md`. For a tracker, read the issues or supplied snapshots. Use their stable identifiers in the spec header and action tags, including the repository or project when ambiguous. Use the tracker's fields and lifecycle for every status update below. Make external changes only within the authorized task. Report unavailable updates as pending and preserve any local index as links only.
 
-`$ARGUMENTS` shapes the queue:
+Exclude work already in a spec from new triage. If asked to resume a selected bug whose local spec is missing, check the linked issue, PR or project handoff and use the recovery rules in `../imp/SKILL.md`. An absent local file does not reopen a bug.
+
+Use the user's request to select the queue:
 - **Empty** — all open bugs, max 5 included
 - **A number** (`/squash 3`) — all open bugs, max N included
 - **Bug IDs** (`/squash B-003 B-007`) — only those bugs, in that order
@@ -32,13 +32,13 @@ For each bug in order:
 
 **a. Load context.** If `Area` is set, read that capability doc. Read `<package>/DECISIONS.md` for every package you end up looking at — a fix must not violate those constraints. Scan `documents/decisions/` for topics that overlap.
 
-**b. Find the root cause.** Read the code along the bug's repro path. You can't run the app, so reason from the code. State:
+**b. Find the root cause.** Read the code along the bug's repro path. Use available, authorized reproduction tools when useful; otherwise reason from the code and label the diagnosis as static, unverified evidence. State:
 - **Root cause** — file:line and one or two sentences on why it breaks
 - **Confidence** — high (found the line) / medium (likely cause, not proven) / low (can't find it)
 
 If confidence is low, say what's missing (e.g. "need the console error", "can't tell which widget"). Offer to add a note to the bug entry and skip it.
 
-**c. Propose the fix.** List the action items it needs, one function each, with point weights (see the point scale in `.claude/skills/draft-spec/SKILL.md`). If this bug shares a root cause or a function with a bug already included, say so and merge the items instead of duplicating them.
+**c. Propose the fix.** List the action items it needs, one function each, with point weights (see the point scale in `../draft-spec/SKILL.md`). If this bug shares a root cause or a function with a bug already included, say so and merge the items instead of duplicating them.
 
 **d. Ask.** Show the bug's points and the running total: `B-007: 3 pts — total 8 / 13`. Then ask:
 
@@ -57,7 +57,7 @@ If no bugs were included, say so and stop — don't write a spec.
 
 ## 3. Write the spec
 
-Overwrite `scratchpad/feature-spec.md` using the `feature-spec.md` template in `.claude/skills/draft-spec/SKILL.md`, with these differences:
+Overwrite `scratchpad/feature-spec.md` using the `feature-spec.md` template in `../draft-spec/SKILL.md`, with these differences:
 
 - **Title:** `# Bug Squash — YYYY-MM-DD`
 - **Header:** replace the `**Roadmap Step:**` line with `**Bugs:** B-003, B-007` (every included bug, comma-separated). `/imp` reads this line to close the bugs. Keep the `**Points:**` line.
@@ -70,7 +70,7 @@ Unit tests are out of scope.
 
 ## 4. Mark the bugs
 
-For each included bug, change its `**Status:** open` to `**Status:** in spec` in `documents/bugs.md` so no one picks it up twice.
+For a file backlog, change each included entry from `**Status:** open` to `**Status:** in spec`. For a tracker, apply its documented triage transition if one exists and report any pending update.
 
 ## 5. Hand off
 

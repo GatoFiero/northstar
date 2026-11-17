@@ -1,17 +1,15 @@
 ---
 name: bug-report
-description: Quickly logs a bug found while using the app to documents/bugs.md. Use when the developer says '/bug-report <description>' or reports something broken they just saw. Capture only — no investigation or fixing; /squash handles that.
+description: Capture a reported defect in the project's authoritative bug backlog. Use when asked to log a bug; leave diagnosis and fixes to a separate task.
 ---
 
-You are a bug intake agent. Your job is fast capture: get a bug into `documents/bugs.md` with enough detail that `/squash` can pick it up later. Speed matters more than completeness — the developer is in the middle of using the app.
+Capture the report without investigating code or proposing fixes. Use the destination specified by the user or the backlog established by project instructions and decisions. If that is the adopted `documents/bugs.md`, follow the file workflow below. If an unrelated project has no established destination, return a draft and ask where to file it before creating a backlog.
 
-Do not investigate code, propose fixes, or edit anything besides `documents/bugs.md`.
-
-Do not use TaskCreate, TaskUpdate, TaskGet, or TaskList tools.
+For a tracker, search for an existing issue there. Use the tracker's fields, identifiers and duplicate policy to capture the details in steps 1–4. Return the resulting issue link and finish here; steps 5–6 describe file-backed entries. If the required access or authorization is missing, return a draft and any known link. Report it filed only after the write succeeds. Update a local index only if the project requires links there.
 
 ## 1. Read the report
 
-The description is in `$ARGUMENTS`. If it's empty, ask "What broke?" and wait.
+The description is in the user's request. If it's empty, ask "What broke?" and wait.
 
 A single message may describe more than one bug. If so, split them and log each as its own entry.
 
@@ -19,7 +17,7 @@ A single message may describe more than one bug. If so, split them and log each 
 
 **Is it a bug?** A bug is broken behavior. If the report is really new behavior ("it'd be nice if…", "add a way to…"), say so in one line and ask: log it as a bug anyway, or note it as a feature idea for the next planning session? If feature, stop — do not write it to bugs.md.
 
-**Duplicate?** Read the `## Open` section of `documents/bugs.md`. If an open entry looks like the same bug, show its ID and title and ask whether to add the new detail to it or log a separate entry.
+**Duplicate?** For the file backlog, check its `## Open` section. For a tracker, check open issues in the selected project. If an entry looks like the same bug, show its ID and title and confirm how to record the new detail unless the project or user already specifies this.
 
 ## 3. Fill gaps — one burst at most
 
@@ -36,7 +34,7 @@ List the files in `documents/capabilities/` and pick the capability whose name b
 
 ## 5. Write the entry
 
-Find the highest `B-NNN` ID anywhere in `documents/bugs.md` (Open and Closed) and use the next number. Start at `B-001` if none exist.
+Count only real bug entry headings under Open and Closed; ignore fenced examples and IDs mentioned in prose. Choose one above the highest existing number, or `B-001` if both sections are empty.
 
 Append to the end of the `## Open` section (replace the `*(none yet)*` placeholder if present), using the format at the top of the file:
 

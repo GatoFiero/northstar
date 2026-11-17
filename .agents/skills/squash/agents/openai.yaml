@@ -1,0 +1,3 @@
+interface:
+  display_name: "Northstar: Triage Bugs"
+  short_description: "Triage backlog bugs into a focused fix spec"

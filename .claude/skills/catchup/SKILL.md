@@ -1,20 +1,14 @@
 ---
 name: catchup
-description: >-
-  Compiles a skimmable progress report from merged PR descriptions over a
-  chosen time range, so a teammate returning after time away can catch up
-  fast. Use when the developer says '/catchup' or asks what they missed,
-  what's changed recently, or for a summary of recent progress.
+description: Summarize merged GitHub pull requests over a date range or PR count for someone catching up on project progress. Use for recent shipped changes, not recovery of an unfinished local session.
 allowed-tools: Read, Glob, Grep, Bash(git branch), Bash(git rev-parse), Bash(gh repo view), Bash(gh pr list), Bash(gh pr view)
 ---
 
 You are a progress-digest agent. Your job is to turn merged PR descriptions into a short report a teammate can skim in a minute or two to catch up on what happened while they were away.
 
-Do not use TaskCreate, TaskUpdate, TaskGet, or TaskList tools.
-
 ## 1. Ask how far back to go
 
-Ask the developer with `AskUserQuestion` before fetching anything:
+Ask the developer using the available question tool or a concise chat question before fetching anything:
 
 - **Last 7 days**
 - **Last 30 days**
@@ -25,25 +19,20 @@ If the developer already gave a range in their message (a date, "since last week
 
 ## 2. Gather merged PRs in range
 
-```bash
-git rev-parse --abbrev-ref HEAD
-gh repo view --json defaultBranchRef -q .defaultBranchRef.name
-```
+Use the requested target branch if the developer supplied one. Otherwise read the default branch from the connected GitHub repository or `gh repo view --json defaultBranchRef`. If it cannot be resolved, report the missing source rather than guessing a branch.
 
-Set `BASE` to the default branch (fall back to `main`, then `master`).
-
-Fetch merged PRs against `BASE`:
+Fetch merged PRs against that base using the connected GitHub tool (filter by repository, base and merged state) or the CLI equivalent:
 
 ```bash
 gh pr list --state merged --base "$BASE" --limit 200 \
   --json number,title,url,mergedAt,author,body
 ```
 
-Filter client-side to the requested range (by `mergedAt` date, or take the first N by merge date if the developer asked for a PR count). If nothing merged in range, say so and stop — don't pad the report.
+Retrieve additional pages or increase the limit until the requested range is covered; do not silently truncate at 200. Sort by mergedAt descending before taking a PR count. If access or a retrieval limit prevents full coverage, label the report partial. Filter client-side to the requested range (by `mergedAt` date, or take the first N by merge date if the developer asked for a PR count). If nothing merged in range, say so and stop — don't pad the report.
 
 ## 3. Extract the signal from each PR
 
-Each PR body follows the `pr-create` template with these sections: `Background Context`, `Change Summary`, `Steps to test`, `Risk mitigation`.
+Northstar PRs may include `Background Context`, `Change Summary`, `Steps to test`, and `Risk mitigation`. Use the actual PR body when another template is in use.
 
 For each PR, pull:
 - **What changed** — from `Change Summary` (fall back to the PR title if the section is empty or missing). Don't just copy the title or bullet points verbatim — read them and restate in one plain-English sentence, like you're telling a teammate what happened, not quoting a log.

@@ -1,0 +1,3 @@
+interface:
+  display_name: "Northstar: Draft a Spec"
+  short_description: "Scope one roadmap step into an implementation spec"

@@ -1,18 +1,18 @@
 # Decision: Development Workflow
 
-These come with Northstar. Change them here if your project works differently, and update the skills to match.
+These are starter decisions. Keep the project's documented tracker, milestones and checks when adopting Northstar.
 
-## Bugs live in `documents/bugs.md`, not an issue tracker
+## Use one authoritative bug backlog
 
-Bugs go in one backlog file, `documents/bugs.md`, with IDs (`B-NNN`), severity, and status.
+By default `documents/bugs.md` holds `B-NNN` IDs, severity and status. If this project uses an issue tracker, record the tracker name and where to find it in project instructions. Use its identifiers, state and closure rules. A local index may link to issues.
 
-- `/bug-report` — fast capture while using the app. No investigation.
-- `/squash` — triages open bugs one at a time (root cause → include / defer / won't fix / feature), then writes one spec to `scratchpad/feature-spec.md` with a `**Bugs:**` header instead of `**Roadmap Step:**`.
-- `/imp` — runs a bug spec like any other; closes each bug in `bugs.md` once all its tagged items are done.
+- `bug-report` captures the defect in the selected backlog.
+- `squash` triages open bugs and writes their stable identifiers in the spec's `Bugs:` header.
+- `imp` verifies the original repro or an equivalent regression before recording closure under project policy.
 
-**Why:** Keeps everything readable by the same skills that read the rest of `documents/`. An issue tracker would split the source of truth.
+**Why:** Intake, triage and implementation need to refer to the same record.
 
-**Constraint:** Three buckets stay separate. Broken behavior → `bugs.md`. Working-but-wrong code → master.md Maintenance (tech debt). New behavior → a roadmap step. `/squash` reroutes feature-shaped bugs to a roadmap rather than fixing them in a bug spec.
+**Constraint:** Keep broken behavior in the selected bug backlog, working-but-wrong code in master roadmap Maintenance, and new behavior in a roadmap step.
 
 ## Feature ideas go through `/ideas`, parked ones live in `documents/ideas.md`
 
@@ -24,7 +24,7 @@ Bugs go in one backlog file, `documents/bugs.md`, with IDs (`B-NNN`), severity, 
 
 ## `/coherence` checks that docs and code agree
 
-One skill checks that the northstar, decisions, capabilities, roadmaps, DECISIONS.md files, backlogs, memory, and code agree — both structure (pairings, checkbox sync, links) and meaning (contradictions, "done" steps that aren't built, code that breaks a decision). Modes: delta since the last run (default), `since <ref>`, `full` (one subagent per capability), or one capability. Each finding names the workflow that fixes it.
+One skill checks that the northstar, decisions, capabilities, roadmaps, DECISIONS.md files, backlogs, memory, and code agree — both structure (pairings, checkbox sync, links) and meaning (contradictions, "done" steps that aren't built, code that breaks a decision). Modes: delta since the last run (default), `since <ref>`, `full` (each capability; optional authorized delegation), or one capability. Each finding names the workflow that fixes it.
 
 **Why:** Drift is mostly in meaning, not structure — a doc claiming something is deferred after it was built.
 
@@ -36,4 +36,12 @@ Each spec action item gets a weight: 1 trivial, 2 standard, 3 new logic, 5 risky
 
 **Why:** A function count treats a one-line field add the same as a schema migration. Points track how dense a spec actually is.
 
-**Constraint:** The scale is defined once, in `.claude/skills/draft-spec/SKILL.md` step 3. `/squash` references it — change it there, not in copies.
+**Constraint:** The point scale lives in the installed `draft-spec` skill. `squash` references the same scale.
+
+## Portable skill maintenance and completion evidence
+
+Northstar supplies the skills. This project's durable records are its own documents and issue history. For a new checkout, restore the approved spec and its checkpoint from a project handoff before resuming implementation.
+
+Implementation checkboxes require completed work and applicable checks. Capability acceptance and bug closure require evidence of the claimed behavior; pending manual or device verification stays open. A capability-only coherence run must not advance a global delta baseline.
+
+**Why:** Portable runtimes have different tools and session storage; consistent files and explicit evidence prevent false completion and lost review scope.

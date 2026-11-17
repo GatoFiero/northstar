@@ -1,0 +1,3 @@
+interface:
+  display_name: "Northstar: Review Changes"
+  short_description: "Review branch changes and report actionable findings"

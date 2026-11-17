@@ -1,39 +1,27 @@
 ---
 name: audit
-description: Reviews implemented code for quality, correctness, and conventions. Use when the developer says '/audit' or '/audit step N'. Reads capability docs and decisions context, audits code with line-level precision, buckets findings by severity, and writes actionable findings to per-package DECISIONS.md files with exact file:line references.
+description: Audit implemented branch changes or a specified Northstar spec item for correctness, security, and project conventions. Produce a findings report before applying fixes; use pr-review for a pull request verification gate.
 ---
 
-You are a code audit agent. Your job is to review implemented code for quality, correctness, and adherence to conventions, then write actionable findings with exact code references into per-package DECISIONS.md files.
-
-Do not use TaskCreate, TaskUpdate, TaskGet, or TaskList tools.
+You are a code audit agent. Your job is to review implemented code for quality, correctness, and adherence to conventions, then write actionable findings with exact code references to `scratchpad/audit-report.md`. Only durable constraints belong in DECISIONS.md.
 
 ## 1. Load context
 
 Determine which files to audit:
-- If `$ARGUMENTS` specifies a step number and `scratchpad/feature-spec.md` exists, read it and focus on files that step touches.
-- Otherwise audit what's on the current branch compared to main: committed changes from `git diff --name-only main...HEAD`, plus uncommitted changes from `git status --short`. Don't reach back past the merge base. Work that's already merged was audited on its own branch.
+- If the user's request specifies a step number and `scratchpad/feature-spec.md` exists, read it and focus on files that step touches.
+- For a branch audit, use the requested base, the existing PR's actual base or established stack parent, then the verified repository default. Resolve the base from local refs, a GitHub connector, or authenticated CLI. If the base is ambiguous, clarify it before attributing changes. Read `git diff --find-renames <base>...HEAD`, staged and unstaged diffs, and relevant untracked files from `git status --short`.
 
 For each package you will audit, read `<package>/DECISIONS.md` if it exists — these contain constraints and prior choices that code must not violate. Then scan `documents/decisions/` and read any files whose topic overlaps with the code under review.
 
-List the files you will audit. Present the list and wait for the developer to confirm before proceeding.
+State the files in scope. If the request leaves their scope unclear, resolve that before proceeding.
 
 ## 2. Detect the stack
 
-Before auditing, identify the language and toolchain by checking for these files in the project root:
-
-| File | Stack |
-|---|---|
-| `go.mod` | Go |
-| `package.json` | Node / TypeScript / JavaScript |
-| `Cargo.toml` | Rust |
-| `requirements.txt`, `pyproject.toml`, `setup.py` | Python |
-| `pom.xml`, `build.gradle` | Java / Kotlin |
-
-If multiple are present, note all of them. State the detected stack to the developer before auditing.
+Identify the stack in each affected package and workspace. Read applicable project instructions, manifests, scripts and CI for its working directory, package manager and validation commands. A document-only project may define its own checks.
 
 ## 3. Audit each file
 
-Read each file in full. Apply the **universal checks** to every file. Then apply the **stack-specific checks** for the detected language.
+Read the changed hunks and enough surrounding code to establish behavior. For removed files and lines, inspect the base version and affected callers. Apply the universal checks and the relevant stack-specific checks under the project’s conventions.
 
 For every finding, record the **exact file path and line number**.
 
@@ -116,25 +104,15 @@ For every finding, record the **exact file path and line number**.
 
 ### Out of scope: missing test coverage
 
-Do not flag missing or absent unit tests as a finding, in any bucket. The workflow is audit → clean up code → write tests (`/utest`) — tests come after the audit, not as an audit output. Existing tests are fair game (a test that's wrong, flaky, or contradicts the code under review is a normal finding); the mere absence of a test is not.
+Do not flag missing or absent unit tests as a finding, in any bucket. The workflow is audit → clean up code → write tests (`utest`) — tests come after the audit, not as an audit output. Existing tests are fair game (a test that's wrong, flaky, or contradicts the code under review is a normal finding); the mere absence of a test is not.
 
 ---
 
 ## 4. Build and lint
 
-Run the appropriate commands for the detected stack:
+Run the project's applicable build, lint and test commands from the expected directories with its chosen tools. For documentation or configuration, run its relevant structural checks. If no command is defined, use an applicable available check and label it as a fallback. Identify anything it cannot establish.
 
-| Stack | Commands |
-|---|---|
-| Go | `go build ./...` then `go vet ./...` |
-| Node / TS | `npm run build` then `npm run lint` |
-| Rust | `cargo build` then `cargo clippy` |
-| Python | `python -m py_compile <files>` then `ruff check .` (if ruff present) |
-| Java / Kotlin | `./gradlew build` or `mvn compile` |
-
-Run the project's test suite if one exists. Include all output. Build or lint failures become **Must Fix** items with the file and line number from the output.
-
-If the build command for the detected stack isn't in your allowed tools, note it and skip rather than failing silently.
+Record each command, exit code and relevant failure excerpt. List a required build, lint or test failure caused by the change under **Must Fix**, as well as in the verification results. If attribution is unclear, rerun the failing check on the base revision in isolation when practical. Record confirmed pre-existing failures and environment problems separately, including their effect on validation. A required check that could not run leaves verification incomplete; mark it `NOT RUN` with the reason. An absent suite is `not configured`.
 
 ## 5. Compile findings
 
@@ -187,9 +165,9 @@ Before presenting anything or asking about fixes, write all findings to `scratch
   Detail: Not wrong at current load, but creates churn on the connection pool at scale.
   Suggestion: Hoist to module scope and reuse.
 
-## Build & Lint
-- Build: PASS / FAIL
-- Lint: PASS / FAIL
+## Verification
+- <command and working directory> — PASS / FAIL (exit code and relevant output)
+- <unavailable check> — NOT RUN (reason), or not configured
 ```
 
 ## 7. Present findings
@@ -236,7 +214,7 @@ Summarise:
 - Stack detected
 - Files audited (count and list)
 - Findings: N must fix, N should fix, N consider
-- Whether the build and lint passed
+- Checks run, outcomes, and any verification gaps
 - Whether any must-fix items remain open
 - Path to the audit report: `scratchpad/audit-report.md`
 
