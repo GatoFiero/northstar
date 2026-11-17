@@ -56,7 +56,8 @@ function verify(rows, expected, prefix, directory) {
     assert.equal(skill.enabled, true, `${skill.name} disabled`);
     assert.ok(skill.interface?.displayName?.trim(), `${skill.name} missing display name`);
     assert.ok(skill.interface?.shortDescription?.trim(), `${skill.name} missing UI description`);
-    assert.equal(fs.realpathSync(skill.path), fs.realpathSync(path.join(directory, name, 'SKILL.md')));
+    const expectedPath = fs.realpathSync(path.join(directory, name, 'SKILL.md'));
+    assert.equal(path.relative(expectedPath, fs.realpathSync(skill.path)), '', `Unexpected path for ${skill.name}`);
   }
 }
 
