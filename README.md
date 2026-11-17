@@ -1,6 +1,6 @@
 # Northstar
 
-Northstar gives a coding project a memory that stays with the code. It provides 14 skills for Codex and Claude Code, plus Markdown conventions for a project's vision, decisions, roadmap and verification. Use the full workflow for work that benefits from a spec and review. A one-line fix does not need a planning ceremony.
+Northstar gives a coding project a memory that stays with the code. It provides 15 skills for Codex and Claude Code, plus Markdown conventions for a project's vision, decisions, roadmap and verification. Use the full workflow for work that benefits from a spec and review. A one-line fix does not need a planning ceremony.
 
 ## Start in Codex
 
@@ -39,6 +39,7 @@ Start a new session **in the project you want to work on** and choose the Norths
 | `$ideas` | Discuss and route feature ideas into a roadmap or the parked-ideas list. |
 | `$coherence` | Find disagreements between project documents, roadmaps, decisions and code. |
 | `$catchup` | A digest of merged PRs over a date range or count. |
+| `$improve-workflow` | Test a change to a recurring procedure and preserve the supported lesson for future chats in this project. |
 
 On a new feature, the usual path is **vision → capability and roadmap → optional foundation → spec → implementation → audit/tests → pull request**. A spec covers one roadmap step, with one function-sized action per item: 1 point for trivial work, 2 for standard work, 3 for new logic and 5 for risky changes. Above the suggested 13 points, consider splitting the work. Review product and scope decisions before the next stage. [Workflow decisions](documents/decisions/dev-workflow.md) explain the conventions.
 
@@ -47,6 +48,14 @@ On a new feature, the usual path is **vision → capability and roadmap → opti
 Open the same project and ask: **“Read the current milestone and the relevant issue or PR. Check the branch, working tree, and active spec. Tell me which step is next and which checks are still pending.”** Use `$catchup` when you want to know what *merged*, rather than what is unfinished.
 
 Committed capability, roadmap and decision documents are available in a fresh checkout; ignored `scratchpad/` files are not. Before switching worktrees or machines mid-step, preserve the approved spec or record its scope, branch/commit, verification and next action in the project's existing handoff location. A successful build does not establish that a deployment, device or manual acceptance check passed.
+
+## Improve a recurring workflow
+
+After a correction, try “Use `$improve-workflow` to find out why our release check passed the wrong artifact. Compare the current command with a better one on the same inputs. If the evidence supports the change, adopt it for this project.” The plugin picker lists this skill as `northstar:improve-workflow`.
+
+The skill borrows the comparison and lesson-reuse ideas from [Harness²](https://github.com/google-research/harness2/blob/main/docs/EXPERIMENTS.md). By default, one chat compares one candidate with the existing procedure. Successful lessons go in the relevant project runbook or in `documents/workflow-lessons.md`. Each lesson names its trigger, action, exception and evidence. A fresh chat doing a release check can find that entry through the project's normal instructions. To use lessons across clones, include the adopted guidance in the project's usual version-control workflow.
+
+For projects already using Northstar, merge the lesson lookup paragraph from [the project instructions](templates/project-instructions.md) into the target's existing instructions. The skill can also add that pointer when adopting the first lesson. Occasional retrospectives run on request. A team that wants routine retrospectives can authorize them in project instructions for a specific recurring task.
 
 ## Maintain Northstar
 

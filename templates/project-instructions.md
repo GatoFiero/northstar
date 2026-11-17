@@ -6,6 +6,8 @@ Merge the parts that fit into the project's existing `AGENTS.md` (Codex) or `CLA
 
 **Where project knowledge lives.**
 
+For a recurring task, look for a matching entry in `documents/workflow-lessons.md` if the file exists, or in the relevant project runbook. Apply it only when its trigger and exceptions fit the live situation. When a repeated mistake or useful correction surfaces, suggest a focused `improve-workflow` comparison at handoff.
+
 - `documents/northstar.md`: vision, users, boundaries and capability map; create it with `draft-northstar` when needed.
 - `documents/capabilities/<name>.md` and `documents/roadmaps/<name>.md`: requirements, acceptance criteria, and the order of implementation. The master roadmap orders steps across capabilities.
 - `documents/decisions/<topic>.md` for decisions shared across this project and `<package>/DECISIONS.md` for local ones. Record consequential choices, alternatives and constraints before the session ends.
