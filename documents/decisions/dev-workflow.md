@@ -8,7 +8,7 @@ Bugs go in one backlog file, `documents/bugs.md`, with IDs (`B-NNN`), severity, 
 
 - `/bug-report` — fast capture while using the app. No investigation.
 - `/squash` — triages open bugs one at a time (root cause → include / defer / won't fix / feature), then writes one spec to `scratchpad/feature-spec.md` with a `**Bugs:**` header instead of `**Roadmap Step:**`.
-- `/imp` — runs a bug spec like any other; closes each bug in `bugs.md` once all its tagged items are done.
+- `/imp` — runs a bug spec like any other; closes each bug in `bugs.md` once its tagged items are done and the original repro or an equivalent regression check passes.
 
 **Why:** Keeps everything readable by the same skills that read the rest of `documents/`. An issue tracker would split the source of truth.
 
@@ -24,7 +24,7 @@ Bugs go in one backlog file, `documents/bugs.md`, with IDs (`B-NNN`), severity, 
 
 ## `/coherence` checks that docs and code agree
 
-One skill checks that the northstar, decisions, capabilities, roadmaps, DECISIONS.md files, backlogs, memory, and code agree — both structure (pairings, checkbox sync, links) and meaning (contradictions, "done" steps that aren't built, code that breaks a decision). Modes: delta since the last run (default), `since <ref>`, `full` (one subagent per capability), or one capability. Each finding names the workflow that fixes it.
+One skill checks that the northstar, decisions, capabilities, roadmaps, DECISIONS.md files, backlogs, memory, and code agree — both structure (pairings, checkbox sync, links) and meaning (contradictions, "done" steps that aren't built, code that breaks a decision). Modes: delta since the last run (default), `since <ref>`, `full` (each capability; optional authorized delegation), or one capability. Each finding names the workflow that fixes it.
 
 **Why:** Drift is mostly in meaning, not structure — a doc claiming something is deferred after it was built.
 
@@ -37,3 +37,11 @@ Each spec action item gets a weight: 1 trivial, 2 standard, 3 new logic, 5 risky
 **Why:** A function count treats a one-line field add the same as a schema migration. Points track how dense a spec actually is.
 
 **Constraint:** The scale is defined once, in `.claude/skills/draft-spec/SKILL.md` step 3. `/squash` references it — change it there, not in copies.
+
+## Portable skill maintenance and completion evidence
+
+Shared workflow bodies and references remain in `.claude/skills/`; `node scripts/sync-skills.cjs` derives `.agents/skills/`. OpenAI interface metadata stays in the portable tree. Relative sibling-skill references keep the bundle usable outside a repository-local installation.
+
+Implementation checkboxes require completed work and applicable checks. Capability acceptance and bug closure require evidence of the claimed behavior; pending manual or device verification stays open. A capability-only coherence run must not advance a global delta baseline.
+
+**Why:** Portable runtimes have different tools and session storage; consistent files and explicit evidence prevent false completion and lost review scope.

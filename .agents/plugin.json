@@ -1,0 +1,15 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "northstar",
+  "version": "0.1.0",
+  "description": "Turn project decisions and roadmap steps into small, verified changes.",
+  "repository": "https://github.com/GatoFiero/northstar",
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Northstar",
+        "shortDescription": "Plan, implement, and review work from project documents."
+      }
+    }
+  }
+}

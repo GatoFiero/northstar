@@ -1,12 +1,10 @@
 ---
 name: coherence
-description: Checks that the northstar, capability docs, roadmaps, decisions, DECISIONS.md files, bug and idea backlogs, memory, and code all agree — structure (pairings, checkbox sync, links) and meaning (contradictions, stale claims, code that breaks a decision, "complete" steps that aren't built). Flags each finding with the workflow that fixes it. Use when the developer says '/coherence', '/coherence full', '/coherence since <ref>', or '/coherence <capability>'.
+description: Check Northstar vision, capabilities, roadmaps, decisions, backlogs, and code for contradictions, stale claims, and status drift. Use for project coherence reviews; report findings before changing documents.
 allowed-tools: Read, Glob, Grep, Write, Edit, Agent, Bash(git log:*), Bash(git diff:*), Bash(git rev-parse:*), Bash(git status:*), Bash(find:*)
 ---
 
 You are a coherence checker. Your job is to find every place where the project's documents and code disagree with each other, and to say which workflow fixes each one. You report — you do not fix, except for approved direct edits at the very end.
-
-Do not use TaskCreate, TaskUpdate, TaskGet, or TaskList tools.
 
 ## Sources of truth
 
@@ -33,7 +31,7 @@ For **built behavior**, code is the ground truth: if a doc says X is built and t
 
 ## 1. Pick the mode
 
-From `$ARGUMENTS`:
+From the user's request:
 
 - **Empty → delta.** Read `scratchpad/coherence-report.md`. Its `**Checked through:**` line holds the commit of the last run. If there's no report, say so and ask: run `full`, or give a ref with `since <ref>`? Wait.
 - **`since <ref>` → delta** from that ref.
@@ -47,7 +45,7 @@ From `$ARGUMENTS`:
 
 List the affected capabilities. If more than ~5 are affected, suggest `full` instead and ask. If nothing changed, say so and stop.
 
-State the mode and scope before checking. Record `git rev-parse HEAD` — it becomes the new `Checked through` value.
+State the mode and scope before checking. Validate a delta ref with Git before using it. If it is missing or no longer an ancestor of HEAD, request a new baseline or full check. Record `git rev-parse HEAD`. Only advance the global `Checked through` marker after a full check or a complete delta check; a capability-only run preserves the previous marker. Record dirty working-tree scope separately.
 
 ## 2. Structural checks — always run in full
 
@@ -59,7 +57,7 @@ These are cheap, so they cover all docs in every mode.
 
 **S3 Milestone order.** For each open master item, look at what its roadmap step says it depends on. Flag a dependency that sits in a **later** milestone than the item itself, or that's still open when the item is marked done.
 
-**S4 Acceptance criteria.** Flag a capability whose roadmap is fully `[x]` but has acceptance criteria still `[ ]`.
+**S4 Acceptance criteria.** Report a capability whose roadmap is fully `[x]` but has acceptance criteria still `[ ]` as pending verification. Do not treat implementation alone as proof of acceptance.
 
 **S5 References.** Every internal markdown link `[text](path)`, and every backticked doc path like `` `documents/…md` `` or `` `capabilities/…md` ``, resolves to a real file. Prerequisite references resolve.
 
@@ -71,7 +69,7 @@ These are cheap, so they cover all docs in every mode.
 
 ## 3. Semantic checks
 
-In **full** mode, run these per capability in parallel subagents (step 4). In **delta** and **capability** mode, run them yourself for the scoped capabilities. The cross-cutting checks (X1–X4) always run in the main context, scoped to what changed in delta mode.
+In **full** mode, check each capability using step 4. In **delta** and **capability** mode, run them yourself for the scoped capabilities. The cross-cutting checks (X1–X4) always run in the main context, scoped to what changed in delta mode.
 
 ### Per-capability checks
 
@@ -95,13 +93,13 @@ For one capability, read: its capability doc, its roadmap, its prerequisites' ca
 
 **X2 Decisions vs each other.** Project-wide decision files contradicting each other, or an `OPEN`/unresolved decision that an in-progress milestone depends on.
 
-**X3 CLAUDE.md and memory.** Facts in `CLAUDE.md` and in the project memory directory (`~/.claude/projects/<this project>/memory/`, if it exists) that contradict the docs or code, or project-type memories that just duplicate a doc (should be deleted — the docs are the source of truth, not memory).
+**X3 Project instructions and memory.** Check applicable project instructions and any project-scoped memory explicitly provided or exposed by this environment against docs and code. Do not assume a global memory directory, search unrelated projects, or edit memory as part of this check. Report conflicts for a separately authorized correction.
 
 **X4 Ideas and bugs vs roadmaps.** Parked ideas in `documents/ideas.md` that are now on a roadmap (should be removed from ideas). Open bugs that read like new behavior (should be a roadmap step), or that a completed step looks to have fixed.
 
 ## 4. Full mode: fan out
 
-Spawn one subagent per non-stub capability, all in one message so they run in parallel. Use the `general-purpose` agent type. Give each this prompt, filled in:
+Check non-stub capabilities sequentially by default. If delegation is available and authorized, distribute independent capabilities within the host concurrency limit. Use this scope for each check:
 
 > You are checking one capability of this project for coherence. Capability: `<name>`. Read `documents/capabilities/<name>.md`, `documents/roadmaps/<name>.md`, the capability docs it lists as prerequisites, any `documents/decisions/` files whose topic overlaps, every `<package>/DECISIONS.md` for packages its roadmap names, and the code those steps name (grep first; read only what you need). Do NOT edit any file.
 >
@@ -118,7 +116,7 @@ Spawn one subagent per non-stub capability, all in one message so they run in pa
 >
 > If you find nothing, return `NO FINDINGS`.
 
-While they run, do the structural checks (step 2) and cross-cutting checks (X1–X4) yourself. Then merge: drop exact duplicates, and merge two findings about the same contradiction seen from both sides into one.
+Do the structural checks (step 2) and cross-cutting checks (X1–X4) in the main context. Then merge: drop exact duplicates, and merge two findings about the same contradiction seen from both sides into one.
 
 ## 5. Triage
 
@@ -140,7 +138,7 @@ While they run, do the structural checks (step 2) and cross-cutting checks (X1�
 | Code breaks a decision and the behavior is broken | **/bug-report** |
 | Code breaks a decision but works | **tech debt** — a master Maintenance entry |
 | Code quality concern beyond a single constraint | **/audit** |
-| Memory contradicts or duplicates docs | **memory** — update or delete the entry |
+| Memory contradicts or duplicates docs | **memory** — propose a correction for separately authorized memory maintenance |
 
 ## 6. Write the report first
 
@@ -150,7 +148,8 @@ Write `scratchpad/coherence-report.md` **before** presenting anything:
 # Coherence Report — YYYY-MM-DD
 
 **Mode:** full | delta since <ref> | <capability>
-**Checked through:** <HEAD commit>
+**Checked through:** <global baseline commit, preserved for capability-only runs; omit if none>
+**Observed HEAD:** <HEAD commit>
 **Scope:** <capabilities checked>
 
 ## Summary

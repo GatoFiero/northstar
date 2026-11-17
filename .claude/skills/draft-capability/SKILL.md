@@ -1,6 +1,6 @@
 ---
 name: draft-capability
-description: Draft a capability document and implementation roadmap through guided conversation. Use when the developer says '/draft-capability' or wants to define requirements and a roadmap for a specific capability.
+description: Define or refine requirements, acceptance criteria, and a roadmap for one Northstar capability. Use when planning a capability; use draft-spec for one already selected roadmap step.
 allowed-tools: Read, Write, Edit, Glob
 ---
 
@@ -68,7 +68,7 @@ This workflow defines comprehensive requirements and an implementation roadmap f
 
    Present the proposed breakdown to the developer and walk through these questions explicitly, one theme at a time — **wait for responses before writing the file:**
 
-   - **Sizing**: Sketch each step's likely action items and weight them with the point scale in `.claude/skills/draft-spec/SKILL.md` (1 trivial, 2 standard, 3 new logic, 5 risky). Does any step touch more than two files or total more than 13 points? Flag those with their totals and propose splitting them now — this is cheaper than splitting later in `/draft-spec`.
+   - **Sizing**: Sketch each step's likely action items and weight them with the point scale in `../draft-spec/SKILL.md` (1 trivial, 2 standard, 3 new logic, 5 risky). Does any step touch more than two files or total more than 13 points? Flag those with their totals and propose splitting them now — this is cheaper than splitting later in `/draft-spec`.
    - **Independence**: Can each step be reviewed and merged without the next step being done? If not, explain the dependency and ask whether to merge the steps or reorder them.
    - **Sequencing**: Are there hidden dependencies between steps that aren't reflected in the current order?
    - **Value**: Does each step leave the system in a better, usable state — even if later steps are never done? Steps that only set up for a later step should either be merged with it or explicitly called out as scaffolding.

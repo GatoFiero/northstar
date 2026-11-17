@@ -1,0 +1,3 @@
+interface:
+  display_name: "Northstar: Catch Up on Merged PRs"
+  short_description: "Catch up on recently merged pull requests"

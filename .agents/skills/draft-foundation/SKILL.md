@@ -1,21 +1,21 @@
 ---
 name: draft-foundation
-description: Drive the architectural design conversation for a capability foundation step. Use when the developer says '/draft-foundation' or wants to execute a Step 1 foundation step from a capability roadmap. Asks targeted questions about framework choices, patterns, and constraints, then writes the package DECISIONS.md before any code is written.
+description: Resolve architecture, package boundaries, and constraints for a Northstar capability foundation, recording decisions before implementation. Use when the roadmap calls for a foundation design conversation.
 ---
 
 # Draft Foundation Workflow
 
-This workflow establishes the architectural foundation for a capability before any implementation begins. Its output is a package DECISIONS.md that captures the patterns and constraints all subsequent `/draft-spec` steps must build on.
+This workflow establishes the architectural foundation for a capability before any implementation begins. Its output is a package DECISIONS.md that captures the patterns and constraints all subsequent `draft-spec` steps must build on.
 
 ## When to use
 
-When a capability roadmap has a Step 1 marked as a foundation step. The dev runs `/draft-foundation [capability-name]` before reaching for `/draft-spec` on Step 2.
+When a capability roadmap has a Foundation step (normally unnumbered). The dev runs `draft-foundation [capability-name]` before reaching for `draft-spec` on the first numbered step.
 
 ## Steps
 
 ### 1. Identify the capability and scope
 
-If a capability name was provided as an argument, read its capability doc from `documents/capabilities/[capability-name].md` and its roadmap from `documents/roadmaps/[capability-name].md`. Confirm the Step 1 description aligns with what the developer wants to establish.
+If a capability name was provided as an argument, read its capability doc from `documents/capabilities/[capability-name].md` and its roadmap from `documents/roadmaps/[capability-name].md`. Confirm the foundation description aligns with what the developer wants to establish.
 
 If no argument was provided, list the capabilities that have foundation steps in their roadmaps (scan `documents/roadmaps/` for steps marked as foundation steps) and ask which one to work on.
 
@@ -105,6 +105,6 @@ Then open `documents/roadmaps/master.md` and search for a line referencing "[Cap
 
 ## Output
 
-`[package-path]/DECISIONS.md` — architectural decisions, patterns, and constraints for the new package. Written before any code exists. Every subsequent `/draft-spec` step for this capability reads this file as part of its context load.
+`[package-path]/DECISIONS.md` — architectural decisions, patterns, and constraints for the new package. Written before any code exists. Every subsequent `draft-spec` step for this capability reads this file as part of its context load.
 
 Optionally: new entries in `documents/decisions/` for any cross-cutting choices.

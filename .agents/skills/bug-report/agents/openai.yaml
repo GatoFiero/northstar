@@ -1,0 +1,3 @@
+interface:
+  display_name: "Northstar: Log a Bug"
+  short_description: "Capture a defect in the Northstar bug backlog"

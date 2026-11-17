@@ -1,0 +1,3 @@
+interface:
+  display_name: "Northstar: Check Project Consistency"
+  short_description: "Check agreement between project documents and code"

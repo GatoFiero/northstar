@@ -1,6 +1,6 @@
 ---
 name: draft-capability
-description: Draft a capability document and implementation roadmap through guided conversation. Use when the developer says '/draft-capability' or wants to define requirements and a roadmap for a specific capability.
+description: Define or refine requirements, acceptance criteria, and a roadmap for one Northstar capability. Use when planning a capability; use draft-spec for one already selected roadmap step.
 ---
 
 # Draft Capability Workflow
@@ -9,7 +9,7 @@ This workflow defines comprehensive requirements and an implementation roadmap f
 
 ## Prerequisites
 
-- `documents/northstar.md` should exist. If it doesn't, suggest running `/draft-northstar` first.
+- `documents/northstar.md` should exist. If it doesn't, suggest running `draft-northstar` first.
 - Have a capability in mind to document.
 
 ## Steps
@@ -67,14 +67,14 @@ This workflow defines comprehensive requirements and an implementation roadmap f
 
    Present the proposed breakdown to the developer and walk through these questions explicitly, one theme at a time — **wait for responses before writing the file:**
 
-   - **Sizing**: Sketch each step's likely action items and weight them with the point scale in `.agents/skills/draft-spec/SKILL.md` (1 trivial, 2 standard, 3 new logic, 5 risky). Does any step touch more than two files or total more than 13 points? Flag those with their totals and propose splitting them now — this is cheaper than splitting later in `/draft-spec`.
+   - **Sizing**: Sketch each step's likely action items and weight them with the point scale in `../draft-spec/SKILL.md` (1 trivial, 2 standard, 3 new logic, 5 risky). Does any step touch more than two files or total more than 13 points? Flag those with their totals and propose splitting them now — this is cheaper than splitting later in `draft-spec`.
    - **Independence**: Can each step be reviewed and merged without the next step being done? If not, explain the dependency and ask whether to merge the steps or reorder them.
    - **Sequencing**: Are there hidden dependencies between steps that aren't reflected in the current order?
    - **Value**: Does each step leave the system in a better, usable state — even if later steps are never done? Steps that only set up for a later step should either be merged with it or explicitly called out as scaffolding.
 
    Adjust the breakdown based on the developer's responses. Once confirmed, write the roadmap to `documents/roadmaps/[capability-name].md`.
 
-   Every step (including Foundation) must have `- [ ] complete` as the first line under its heading — this is the progress indicator that `/draft-foundation` and `/imp` flip to `- [x] complete` when done.
+   Every step (including Foundation) must have `- [ ] complete` as the first line under its heading — this is the progress indicator that `draft-foundation` and `imp` flip to `- [x] complete` when done.
 
 15. **Add capability to Northstar** — Read `documents/northstar.md`. Add an entry for this capability under the **System Components** section. Place it in the correct position: MVP capabilities before the later-phase entries, later-phase capabilities before post-MVP entries. Format it to match existing entries: bold name, em-dash, one-sentence description, link to the capability doc. Present the proposed entry and ask: **"Does this Northstar entry look right?"** Iterate until confirmed, then write the change.
 
@@ -104,9 +104,9 @@ Reviewed and confirmed by developer before Phase 2 begins.
 **Phase 2 — roadmap** (`documents/roadmaps/[capability-name].md`):
 - Proposed as a discussion first; written to file only after the developer confirms the breakdown
 - A `## Foundation` step (unnumbered, design conversation → package DECISIONS.md) appears before numbered steps when the capability introduces new infrastructure; otherwise omitted
-- Numbered steps start at Step 1 and are each scoped as `/draft-spec` inputs — sized to touch at most two files and ~13 points (see the point scale in `/draft-spec`)
+- Numbered steps start at Step 1 and are each scoped as `draft-spec` inputs — sized to touch at most two files and ~13 points (see the point scale in `draft-spec`)
 - Steps are sequenced so each one is independently mergeable and leaves the system in a better state
-- Every step has `- [ ] complete` as its first line — flipped to `- [x] complete` by `/draft-foundation` or `/imp` on completion
+- Every step has `- [ ] complete` as its first line — flipped to `- [x] complete` by `draft-foundation` or `imp` on completion
 
 **Phase 3 — Northstar update** (`documents/northstar.md`):
 - New entry added under System Components in the correct MVP / later-phase / post-MVP position

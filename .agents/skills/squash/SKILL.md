@@ -1,21 +1,19 @@
 ---
 name: squash
-description: Works through open bugs in documents/bugs.md one at a time — finds the root cause, proposes a fix, and lets the developer include, defer, or reroute each — then writes a single point-budgeted spec to scratchpad/feature-spec.md for /imp. Use when the developer says '/squash', '/squash N', '/squash B-003 B-007', or '/squash <capability>'.
+description: Triage defects in documents/bugs.md, investigate their causes, and draft a point-budgeted fix spec for approved bugs. Use for Northstar backlog planning, not Git squash commits or immediate implementation.
 ---
 
-You are a bug triage and planning agent. Your job is to turn a batch of open bugs into one `/imp`-ready spec. You investigate and plan — you do not write code.
-
-Do not use TaskCreate, TaskUpdate, TaskGet, or TaskList tools.
+You are a bug triage and planning agent. Your job is to turn a batch of open bugs into one `imp`-ready spec. You investigate and plan — you do not write code.
 
 ## 1. Pick the queue
 
 Read `documents/bugs.md`. Only entries under `## Open` with `**Status:** open` are candidates — skip `in spec`.
 
-`$ARGUMENTS` shapes the queue:
+the user's request shapes the queue:
 - **Empty** — all open bugs, max 5 included
-- **A number** (`/squash 3`) — all open bugs, max N included
-- **Bug IDs** (`/squash B-003 B-007`) — only those bugs, in that order
-- **A capability name** (`/squash analytics`) — only bugs with that `Area`, max 5 included
+- **A number** (`squash 3`) — all open bugs, max N included
+- **Bug IDs** (`squash B-003 B-007`) — only those bugs, in that order
+- **A capability name** (`squash analytics`) — only bugs with that `Area`, max 5 included
 
 Order the queue: `blocker` → `annoying` → `cosmetic`, then oldest `Found` date first.
 
@@ -31,13 +29,13 @@ For each bug in order:
 
 **a. Load context.** If `Area` is set, read that capability doc. Read `<package>/DECISIONS.md` for every package you end up looking at — a fix must not violate those constraints. Scan `documents/decisions/` for topics that overlap.
 
-**b. Find the root cause.** Read the code along the bug's repro path. You can't run the app, so reason from the code. State:
+**b. Find the root cause.** Read the code along the bug's repro path. Use available, authorized reproduction tools when useful; otherwise reason from the code and label the diagnosis as static, unverified evidence. State:
 - **Root cause** — file:line and one or two sentences on why it breaks
 - **Confidence** — high (found the line) / medium (likely cause, not proven) / low (can't find it)
 
 If confidence is low, say what's missing (e.g. "need the console error", "can't tell which widget"). Offer to add a note to the bug entry and skip it.
 
-**c. Propose the fix.** List the action items it needs, one function each, with point weights (see the point scale in `.agents/skills/draft-spec/SKILL.md`). If this bug shares a root cause or a function with a bug already included, say so and merge the items instead of duplicating them.
+**c. Propose the fix.** List the action items it needs, one function each, with point weights (see the point scale in `../draft-spec/SKILL.md`). If this bug shares a root cause or a function with a bug already included, say so and merge the items instead of duplicating them.
 
 **d. Ask.** Show the bug's points and the running total: `B-007: 3 pts — total 8 / 13`. Then ask:
 
@@ -56,10 +54,10 @@ If no bugs were included, say so and stop — don't write a spec.
 
 ## 3. Write the spec
 
-Overwrite `scratchpad/feature-spec.md` using the `feature-spec.md` template in `.agents/skills/draft-spec/SKILL.md`, with these differences:
+Overwrite `scratchpad/feature-spec.md` using the `feature-spec.md` template in `../draft-spec/SKILL.md`, with these differences:
 
 - **Title:** `# Bug Squash — YYYY-MM-DD`
-- **Header:** replace the `**Roadmap Step:**` line with `**Bugs:** B-003, B-007` (every included bug, comma-separated). `/imp` reads this line to close the bugs. Keep the `**Points:**` line.
+- **Header:** replace the `**Roadmap Step:**` line with `**Bugs:** B-003, B-007` (every included bug, comma-separated). `imp` reads this line to close the bugs. Keep the `**Points:**` line.
 - **Feature Summary:** replace it with a `## Bugs` section — one short block per included bug: ID, title, root cause (file:line), and the fix in one sentence.
 - **Action items:** tag each with every bug it fixes, after the points: `- [ ] **1. \`FunctionName\`** (line XX) · 2 pts · B-003`. An item fixing two bugs lists both: `· B-003, B-007`.
 - **Data Flow:** only include it if a fix changes how data moves. Otherwise omit the section.
@@ -73,4 +71,4 @@ For each included bug, change its `**Status:** open` to `**Status:** in spec` in
 
 ## 5. Hand off
 
-Summarize in a few lines: bugs included, points total, bugs deferred / won't-fix / rerouted. Then say: "Run `/imp` to start." Stop.
+Summarize in a few lines: bugs included, points total, bugs deferred / won't-fix / rerouted. Then say: "Run `imp` to start." Stop.

@@ -1,6 +1,6 @@
 ---
 name: utest
-description: Interactive unit test workflow — diffs the current branch, gets developer approval on a test plan, then writes and runs each test in sequence. Use when the developer says '/utest'.
+description: Plan, write, and run focused unit tests for changed behavior on the current branch. Use when the user requests new unit coverage; approve the plan once, then execute it without per-test approvals.
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash(git diff), Bash(git status), Bash(git merge-base), Bash(gh repo view), Bash(go test ./...), Bash(npm test), Bash(cargo test), Bash(pytest)
 ---
 
@@ -16,35 +16,18 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash(git diff), Bash(git status), 
 
 ## Workflow
 
-1. **Detect the stack** — Check for these files in the project root:
-
-   | File | Stack | Test command |
-   |---|---|---|
-   | `go.mod` | Go | `go test ./...` |
-   | `package.json` | Node / TS | `npm test` |
-   | `Cargo.toml` | Rust | `cargo test` |
-   | `requirements.txt` / `pyproject.toml` | Python | `pytest` |
-
-   State the detected stack and test command before proceeding.
+1. **Find the test command** — Read applicable project instructions, test configuration and CI for the changed package. Use its declared working directory, package manager and test runner. Check nested workspaces and existing tests for equivalent coverage. If no runner is configured, explain what can be tested with the project's toolchain before proposing new tooling.
 
 2. **Read the spec** — If `scratchpad/feature-spec.md` exists, read it for feature context and intended changes. Note which functions and files are in scope.
 
-3. **Gather changes** — Detect the base branch dynamically, then capture the full diff:
-   ```
-   gh repo view --json defaultBranchRef -q .defaultBranchRef.name   # get base branch (fall back to main, then master)
-   git merge-base HEAD <base>
-   git diff <merge-base>...HEAD
-   git diff --cached
-   git status
-   ```
-   Skim the key hunks to understand what code was added or changed.
+3. **Gather changes** — Use the requested comparison base, the existing PR's base or the established parent in a stack. Otherwise resolve the verified repository default from a GitHub connector, authenticated CLI, or the Git remote HEAD. Report ambiguity instead of guessing a branch name. Read `git diff --find-renames <base>...HEAD` and inspect staged, unstaged and relevant untracked files. Include deleted behavior and changed contracts when identifying useful cases.
 
-4. **Create test plan** — Propose a comprehensive unit test strategy. Write it to `scratchpad/test-plan.md` containing:
+4. **Create test plan** — Propose cases that would catch a concrete regression and are missing from the existing suite. Write it to `scratchpad/test-plan.md` containing:
    - Test strategy overview
    - All test candidates with coverage areas (happy path, edge cases, error paths)
-   - Status column for each: `pending` / `created` / `passed` / `failed`
+   - Status column for each: `pending` / `created` / `passed` / `failed` / `not run`
 
-5. **Present test plan** — Show the plan and wait for developer approval before writing any tests. This is the one checkpoint: the developer removes, edits, or adds candidates here, not per-test later.
+5. **Present test plan** — Use the approved cases if the developer already selected them. Otherwise present the plan for review once before writing tests.
 
 6. **Implement the next candidate** — Once the plan is approved, work through candidates in order without asking again. For each: write only that test to the appropriate test file, keeping the diff minimal. Follow stack conventions:
    - **Go**: standard `testing` package; `testify/assert` if already a dependency; table-driven tests where appropriate
@@ -54,19 +37,19 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash(git diff), Bash(git status), 
 
 7. **Update test plan** — Mark the test as `created` in `scratchpad/test-plan.md`.
 
-8. **Run the test** — Execute the test command scoped to the new test if possible; otherwise run the full suite. Report results immediately.
+8. **Run the test** — Execute the test command scoped to the new test if possible; otherwise run the full suite. Record the command, working directory and result. If a prerequisite is unavailable, mark the case `not run` with the reason.
 
-9. **Update status** — Mark `passed` or `failed` in the test plan. If failed, surface the failure details, propose a fix, and continue — no need to pause for approval unless the fix requires a design choice only the developer can make.
+9. **Update status** — For a completed run, mark `passed` or `failed` in the test plan. If failed, surface the failure details, propose a fix, and continue — no need to pause for approval unless the fix requires a design choice only the developer can make.
 
 10. **Iterate** — Repeat steps 6–9 for the next candidate. When all candidates are done, provide a final summary of the test plan status.
 
 ## Output
 - `scratchpad/test-plan.md` — strategy and per-test status tracking
 - Test files written to the appropriate test directories in the codebase
-- Pass/fail result reported after each test is written
+- Command and outcome for each new test, including any unverified cases
 - Any bugs found during test execution surfaced immediately
 
 ## Error Handling
 - If test creation fails, report the specific error and retry with an adjusted approach.
-- If the test command is not in allowed tools for the detected stack, note it and ask the developer to run it manually.
+- If the runner is unavailable, record the missing prerequisite and the exact project command for a later run.
 - If no existing test structure is found, suggest where to create it before proceeding.

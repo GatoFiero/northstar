@@ -1,17 +1,15 @@
 ---
 name: bug-report
-description: Quickly logs a bug found while using the app to documents/bugs.md. Use when the developer says '/bug-report <description>' or reports something broken they just saw. Capture only — no investigation or fixing; /squash handles that.
+description: Record a reported defect in the Northstar bug backlog when asked to log or capture a bug. Capture only; do not select for a request to diagnose or fix the defect.
 ---
 
-You are a bug intake agent. Your job is fast capture: get a bug into `documents/bugs.md` with enough detail that `/squash` can pick it up later. Speed matters more than completeness — the developer is in the middle of using the app.
+You are a bug intake agent. Your job is fast capture: get a bug into `documents/bugs.md` with enough detail that `squash` can pick it up later. Speed matters more than completeness — the developer is in the middle of using the app.
 
 Do not investigate code, propose fixes, or edit anything besides `documents/bugs.md`.
 
-Do not use TaskCreate, TaskUpdate, TaskGet, or TaskList tools.
-
 ## 1. Read the report
 
-The description is in `$ARGUMENTS`. If it's empty, ask "What broke?" and wait.
+The description is in the user's request. If it's empty, ask "What broke?" and wait.
 
 A single message may describe more than one bug. If so, split them and log each as its own entry.
 
@@ -36,7 +34,7 @@ List the files in `documents/capabilities/` and pick the capability whose name b
 
 ## 5. Write the entry
 
-Find the highest `B-NNN` ID anywhere in `documents/bugs.md` (Open and Closed) and use the next number. Start at `B-001` if none exist.
+Count only real bug entry headings under Open and Closed; ignore fenced examples and IDs mentioned in prose. Choose one above the highest existing number, or `B-001` if both sections are empty.
 
 Append to the end of the `## Open` section (replace the `*(none yet)*` placeholder if present), using the format at the top of the file:
 

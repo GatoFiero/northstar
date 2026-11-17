@@ -1,0 +1,3 @@
+interface:
+  display_name: "Northstar: Review a Pull Request"
+  short_description: "Verify and review a pull request or branch"

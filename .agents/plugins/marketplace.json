@@ -1,0 +1,12 @@
+{
+  "name": "northstar-workflows",
+  "interface": { "displayName": "Northstar Workflows" },
+  "plugins": [
+    {
+      "name": "northstar",
+      "source": { "source": "local", "path": "./.agents" },
+      "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" },
+      "category": "Productivity"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 ---
 name: draft-northstar
-description: Create or refine the project Northstar vision document through guided conversation. Use when the developer says '/draft-northstar' or wants to define or update the high-level project vision.
+description: Create or refine documents/northstar.md through a product vision conversation covering users, goals, boundaries, and capabilities. Use for project direction, not detailed feature specifications.
 ---
 
 # Northstar Project Vision Workflow

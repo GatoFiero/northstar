@@ -1,0 +1,3 @@
+interface:
+  display_name: "Northstar: Open a Pull Request"
+  short_description: "Prepare and open a reviewable GitHub pull request"

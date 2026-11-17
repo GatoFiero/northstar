@@ -1,28 +1,28 @@
 ---
 name: draft-spec
-description: Draft a function-scoped feature spec through guided conversation. Use when the developer says '/draft-spec' or wants to clarify, scope, and document a feature before implementation. Writes to scratchpad/feature-spec.md.
+description: Turn one Northstar roadmap step into a small, point-budgeted implementation spec in scratchpad/feature-spec.md. Use to scope and plan a selected step before coding; use squash for backlog bug triage.
 ---
 
 ## Purpose
-A concise, repeatable workflow to clarify feature requests, restate understanding, map data flow, list impacted files and functions, edge cases, and produce function-scoped action items — without implementing any code. Always writes to `scratchpad/feature-spec.md` (single living file, overwritten each run).
+A concise, repeatable workflow to clarify feature requests, restate understanding, map data flow, list impacted files and functions, edge cases, and produce function-scoped action items — without implementing any code. Writes to `scratchpad/feature-spec.md`. Read an existing spec first; if it contains unfinished work, preserve it unless the developer explicitly approves replacement.
 
-One spec covers exactly one roadmap step. This is a hard rule — the spec header records which roadmap step it corresponds to, and `/imp` uses that to update progress tracking when complete.
+One spec covers exactly one roadmap step. This is a hard rule — the spec header records which roadmap step it corresponds to, and `imp` uses that to update progress tracking when complete.
 
 ## Workflow
 
 1. **Input & Initial Read** — Ingest the feature request. Read relevant files to understand context.
 
-2. **Identify Capability and Roadmap Step** — List all capability files from `documents/capabilities/` with numbers. Ask: "Is this request related to an existing capability? Type the number, or 'no' if not related." **Wait for response before proceeding.**
+2. **Identify Capability and Roadmap Step** — Use the capability and step already supplied when unambiguous; ask only for missing selections. Otherwise list capability files from `documents/capabilities/` with numbers. Ask: "Is this request related to an existing capability? Type the number, or 'no' if not related." **Wait for response before proceeding.**
 
    If the user selects a capability: read that capability doc and its matching roadmap from `documents/roadmaps/` in full. Then scan the capability doc for any related or dependent capabilities it mentions (e.g. in dependencies, technical requirements, or integration sections) and read those capability docs from `documents/capabilities/` as well — they define contracts and scope boundaries this spec must not violate. Then scan `documents/decisions/` — read any file whose topic is relevant to the feature (e.g. touches the same package, API layer, or data source). For each package the selected roadmap step targets, also read `<package>/DECISIONS.md` if it exists. Briefly state what you loaded ("Read: data-ingestion.md, user-accounts.md, internal/ingestion/DECISIONS.md") before continuing.
 
-   Show the roadmap steps with completion status (✓ for `[x] complete`, open for `[ ] complete`). Ask: "Which roadmap step are you speccing? Type the step number." **Wait for response before proceeding.**
+   If no step was specified, show the roadmap steps with completion status (✓ for `[x] complete`, open for `[ ] complete`) and ask which step to spec. If the request identifies an unambiguous step, use it.
 
    Once a step is selected, actively compare the loaded decisions against the selected roadmap step. Look for: constraints that contradict the step's stated approach or architectural rules that change the target files. If any conflicts exist, surface them now, described by behavior or design (e.g. "the roadmap says results get cached, but the analytics decision says they're always computed fresh") — before the scope check and before any clarifying questions — and resolve them with the developer before continuing.
 
    Also scan the incomplete steps ahead in the roadmap. Ask: would any design choice in this spec foreclose or force rework on a future step? If yes, surface that before asking any clarifying questions so the spec accounts for it from the start.
 
-   If no capability is selected, still scan `documents/decisions/` for relevant files and load any that apply. Skip roadmap step selection — the spec header will have no Roadmap Step line.
+   If no capability matches, help establish the capability and roadmap step before drafting a feature spec. For backlog defects, use `squash`, whose spec uses a `Bugs:` header instead. Do not emit a feature spec without its roadmap identity.
 
 3. **Scope Check** — Before asking any clarifying questions, assess whether the selected roadmap step is appropriately sized for a single spec. Sketch the action items the step likely needs and weight each with the point scale below. A step is too large if the sketch totals more than **13 points**, or its description covers separable phases of work that could ship independently.
 
@@ -55,7 +55,7 @@ One spec covers exactly one roadmap step. This is a hard rule — the spec heade
    - Propose a concrete split: name each sub-step by what it delivers, with the packages it touches in a short trailing note
    - Ask the developer to confirm or adjust the breakdown
    - **Wait for confirmation before proceeding**
-   - Rewrite the roadmap file in-place: replace the original step with the confirmed sub-steps, using letter suffixes (e.g. Step 4 → Step 4a and Step 4b). Preserve all other steps and their completion status unchanged
+   - Rewrite the roadmap file in-place: replace the original step with the confirmed sub-steps, using letter suffixes (e.g. Step 4 → Step 4a and Step 4b). Update corresponding master-roadmap entries and prerequisite references to the new step identities. Preserve unrelated steps and their completion status
    - State which sub-step this spec will cover, then continue
 
    If the step is appropriately scoped, proceed directly to clarifying questions.
@@ -80,7 +80,7 @@ One spec covers exactly one roadmap step. This is a hard rule — the spec heade
    - Give 2–3 options and a recommendation with a one-line reason, so most answers can be "yes" or "B".
    - Keep each question to 1–3 sentences.
 
-   Ask questions in bursts of 2–3, grouped by theme. Use `AskUserQuestion` when a question has clear options. **Wait for answers after each burst before asking the next.** If an answer raises a follow-up, ask it in the next burst — do not defer it to the end.
+   Ask questions in bursts of 2–3, grouped by theme. Use the available question tool, or ask in chat, when a question has clear options. **Wait for answers after each burst before asking the next.** If an answer raises a follow-up, ask it in the next burst — do not defer it to the end.
 
    Work through these themes in order, skipping any that provably do not apply:
 
@@ -100,7 +100,7 @@ One spec covers exactly one roadmap step. This is a hard rule — the spec heade
 
    Give each item a point weight from the scale in step 3, and total them. If the final total is over 13 and the developer didn't already pick commit groups or proceed at the scope check, flag it now: show the total and offer the same choices as step 3, using its table to pick the recommendation. Splitting the roadmap step at this point means rewriting the roadmap as in step 3 and trimming the spec to the first sub-step.
 
-   If using commit groups, assign every item to a group. Item numbers keep counting across groups (don't restart at 1) so `/imp` step N stays unique. Re-check that each group leaves the build passing; move items between groups if not.
+   If using commit groups, assign every item to a group. Item numbers keep counting across groups (don't restart at 1) so `imp` step N stays unique. Re-check that each group leaves the build passing; move items between groups if not.
 
 8. **Edge Cases** — List notable edge cases, failure modes, and validation needs (nil/empty, timeouts, permissions, config).
 
@@ -228,11 +228,11 @@ Always write/update: `scratchpad/feature-spec.md` (single living file per run).
 
 ## Notes
 - Spec only — no implementation.
-- Conversation vs. file: the conversation stays at behavior and design level; the spec file keeps full code detail (functions, lines, points) because `/imp` depends on it.
+- Conversation vs. file: the conversation stays at behavior and design level; the spec file keeps full code detail (functions, lines, points) because `imp` depends on it.
 - Unit tests are out of scope unless specifically requested.
 - Keep concise and scannable (bullets, short sentences).
 - If requirements are incomplete, surface blockers in Open Questions and seek clarification before writing the spec.
 - Action item granularity: one function per item, independently reviewable. A function that can't be described in one sentence of intent is a design problem — split the function, not just the spec item.
 - Spec size is measured in points (step 3's scale), not function count. Suggested max is 13; the developer can choose to go over. Over 13, recommend commit groups (14–26) or a roadmap split (27+ or separable phases).
 - Commit groups stay in the one spec file and one roadmap step. When a spec has them, the header `**Points:**` line shows the total plus each group, e.g. `**Points:** 21 / 13 — Commit 1: 12, Commit 2: 9`.
-- One spec = one roadmap step. The `Roadmap Step:` header line is not optional — `/imp` uses it to flip the correct roadmap checkbox when the spec is complete.
+- One spec = one roadmap step. The `Roadmap Step:` header line is not optional — `imp` uses it to flip the correct roadmap checkbox when the spec is complete.
