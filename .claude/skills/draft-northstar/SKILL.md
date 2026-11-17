@@ -6,11 +6,11 @@ allowed-tools: Read, Write, Edit, Glob
 
 # Northstar Project Vision Workflow
 
-This workflow helps define and document the high-level vision for the project through an interactive conversation.
+Use the user's brief and existing project documents to answer the questions below. Ask about gaps that would change the vision. When a brief already settles a topic, carry its answer into the draft.
 
 ## Steps
 
-1. **Initiate the conversation** — Start by asking about the project. If no project name is provided, ask for it. If a `documents/northstar.md` already exists, read it first and ask whether this is a refinement pass or a full rewrite.
+1. **Identify the project** — Read the existing `documents/northstar.md` if present. For a refinement, preserve existing decisions, capability links and scope outside the requested change. Confirm the intended scope when a proposed rewrite would displace them.
 
 2. **Collect supporting context** — Ask if there are any supporting documents or notes to reference. If provided as file paths, read them. If provided as pasted text, work from that directly.
 
@@ -54,7 +54,7 @@ The workflow produces a `documents/northstar.md` document containing:
 - Executive summary
 - Problem statement and solution
 - Target users and stakeholders
-- Core capabilities
+- A `## System Components` section listing capabilities and their phases. Preserve existing capability links. Add the link to a new capability when its document exists.
 - Strategic goals and success metrics
 - Scope and boundaries
 - Technical context

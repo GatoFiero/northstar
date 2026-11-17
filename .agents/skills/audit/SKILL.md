@@ -112,7 +112,7 @@ Do not flag missing or absent unit tests as a finding, in any bucket. The workfl
 
 Run the project's applicable build, lint and test commands from the expected directories with its chosen tools. For documentation or configuration, run its relevant structural checks. If no command is defined, use an applicable available check and label it as a fallback. Identify anything it cannot establish.
 
-Record each command, exit code and relevant failure excerpt. A configured command that could not run is `NOT RUN` with the reason. An absent suite is `not configured`. Attribute a failure to the change only when the evidence supports it; distinguish prior failures and environment problems.
+Record each command, exit code and relevant failure excerpt. List a required build, lint or test failure caused by the change under **Must Fix**, as well as in the verification results. If attribution is unclear, rerun the failing check on the base revision in isolation when practical. Record confirmed pre-existing failures and environment problems separately, including their effect on validation. A required check that could not run leaves verification incomplete; mark it `NOT RUN` with the reason. An absent suite is `not configured`.
 
 ## 5. Compile findings
 

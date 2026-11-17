@@ -14,6 +14,7 @@ Roadmap completion records implementation; capability acceptance records demonst
 
 ## Bug specs
 
-Skip roadmap updates. For each listed bug, inspect all action items tagged with its ID. Once they are implemented, verify the original repro or an equivalent regression check. Only with that evidence move the entry from `## Open` to `## Closed`, remove its status line, and add `- **Closed:** YYYY-MM-DD — fixed (spec: <title>; verified: <check>)`.
+Skip roadmap updates. For each listed bug, inspect all action items tagged with its ID. Once they are implemented, verify the original repro or an equivalent regression check. Leave the bug open while verification is pending.
 
-If reproduction remains unavailable, keep the bug open with status `in spec` and a note that implementation is complete but verification is pending. Do not represent static reasoning or a passing compile as a reproduced fix.
+- **File backlog:** After verification, move the entry from `## Open` to `## Closed`, remove its status line, and add `- **Closed:** YYYY-MM-DD — fixed (spec: <title>; verified: <check>)`. Record any pending verification on the open entry.
+- **Tracker:** Follow the project's closure policy, including any additional acceptance gates. If authorized and accessible, update the exact issue and verify the result. Otherwise report its ID, evidence and pending update. Keep an index link separate from the issue's status.

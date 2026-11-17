@@ -67,7 +67,7 @@ Ask: "What is the package path for this layer?" (e.g. `web/src/components`, `int
 
 ### 7. Write the package DECISIONS.md
 
-Write to `[package-path]/DECISIONS.md`. Use this format for each decision:
+Merge the agreed decisions into `[package-path]/DECISIONS.md`. Preserve unrelated entries and historical rationale. Use this format for each new decision:
 
 ```
 ## <short title>
@@ -101,7 +101,7 @@ If nothing conflicts, state that clearly. Do not manufacture amendments.
 
 In `documents/roadmaps/[capability-name].md`, find the `## Foundation` step and flip its `- [ ] complete` to `- [x] complete`.
 
-Then open `documents/roadmaps/master.md` and search for a line referencing "[Capability Name] Foundation". If found, flip `- [ ]` to `- [x]`. Master may abbreviate long capability names — match on the obvious short form too. If no matching line exists, skip silently.
+In `documents/roadmaps/master.md`, update the matching Foundation entry for that capability. If it is missing or several entries could match, report the discrepancy and leave those entries intact.
 
 ## Output
 

@@ -6,7 +6,7 @@ allowed-tools: Read, Write, Edit, Glob
 
 # Draft Capability Workflow
 
-This workflow defines comprehensive requirements and an implementation roadmap for a capability, building upon the project Northstar.
+Use the project vision, code and user's brief to draft the capability. Ask about unresolved choices. For revisions, read the existing capability, its roadmap and the matching master entries before proposing edits.
 
 ## Prerequisites
 
@@ -75,17 +75,17 @@ This workflow defines comprehensive requirements and an implementation roadmap f
 
    Adjust the breakdown based on the developer's responses. Once confirmed, write the roadmap to `documents/roadmaps/[capability-name].md`.
 
-   Every step (including Foundation) must have `- [ ] complete` as the first line under its heading — this is the progress indicator that `/draft-foundation` and `/imp` flip to `- [x] complete` when done.
+   Start each **new** step (including Foundation) with `- [ ] complete` under its heading. On a revision, retain existing step numbers, completion states, evidence and references. If steps need renumbering, splitting or reopening, show the affected references and agree on the change first.
 
-15. **Add capability to Northstar** — Read `documents/northstar.md`. Add an entry for this capability under the **System Components** section. Place it in the correct position: MVP capabilities before the later-phase entries, later-phase capabilities before post-MVP entries. Format it to match existing entries: bold name, em-dash, one-sentence description, link to the capability doc. Present the proposed entry and ask: **"Does this Northstar entry look right?"** Iterate until confirmed, then write the change.
+15. **Link the capability from the vision** — Find its existing entry in `documents/northstar.md` by link or capability identity. Update that entry in place if needed. For a new capability, propose one linked entry in the appropriate phase of **System Components**, or the project's existing equivalent. Write the agreed change.
 
-16. **Merge into master roadmap** — Read `documents/roadmaps/master.md`. Determine where this capability's steps belong. Walk through these questions explicitly with the developer before writing anything:
+16. **Merge into master roadmap** — Read `documents/roadmaps/master.md`. Match existing entries by capability and step, preserving their status and placement unless the agreed change moves them. Add only missing entries. Resolve open placement questions with the developer before writing:
 
    - **Phase placement**: Which phase does this capability belong to? Does it depend on anything in the roadmap that must finish first? Does anything already in the roadmap depend on this capability?
    - **Track structure**: Should the steps run in a new track (parallel with existing work in the same phase), extend an existing track, or form a new standalone phase?
    - **Convergence**: Are there any convergence points — steps from this capability that must wait for another track, or vice versa?
 
-   Once placement is confirmed, add the steps to `documents/roadmaps/master.md` using the naming convention already established there (e.g. `[Capability Name] Foundation`, `[Capability Name] Step N`). Do not add status checkboxes to master roadmap entries — the master roadmap uses plain `- [ ]` / `- [x]` list items only (no "complete" sub-lines). Write the update.
+   Write the agreed changes using the existing naming convention, e.g. `[Capability Name] Foundation` or `[Capability Name] Step N`. The master entry uses a single `- [ ]` or `- [x]` list item per step.
 
 ## Output
 
@@ -107,15 +107,15 @@ Reviewed and confirmed by developer before Phase 2 begins.
 - A `## Foundation` step (unnumbered, design conversation → package DECISIONS.md) appears before numbered steps when the capability introduces new infrastructure; otherwise omitted
 - Numbered steps start at Step 1 and are each scoped as `/draft-spec` inputs — sized to touch at most two files and ~13 points (see the point scale in `/draft-spec`)
 - Steps are sequenced so each one is independently mergeable and leaves the system in a better state
-- Every step has `- [ ] complete` as its first line — flipped to `- [x] complete` by `/draft-foundation` or `/imp` on completion
+- Every step keeps its completion checkbox under the heading. New steps begin unchecked.
 
 **Phase 3 — Northstar update** (`documents/northstar.md`):
-- New entry added under System Components in the correct MVP / later-phase / post-MVP position
+- One linked entry per capability in the correct phase of the vision
 - One sentence, bold name, link to capability doc — matches the format of existing entries
 - Confirmed by developer before writing
 
 **Phase 4 — master roadmap update** (`documents/roadmaps/master.md`):
 - Steps added to the correct phase and track after explicit placement discussion
 - Uses the established naming convention (`[Capability Name] Foundation`, `[Capability Name] Step N`)
-- Plain `- [ ]` list items only — no `- [ ] complete` sub-lines in the master roadmap
+- One plain checkbox per step using its current completion state
 - Confirmed by developer before writing

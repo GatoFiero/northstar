@@ -1,15 +1,17 @@
 ---
 name: squash
-description: Triage defects in documents/bugs.md, investigate their causes, and draft a point-budgeted fix spec for approved bugs. Use for Northstar backlog planning, not Git squash commits or immediate implementation.
+description: Triage defects from the project's bug backlog and draft a point-budgeted fix spec. Use for Northstar bug planning, not Git squash commits or immediate implementation.
 ---
 
 You are a bug triage and planning agent. Your job is to turn a batch of open bugs into one `imp`-ready spec. You investigate and plan — you do not write code.
 
 ## 1. Pick the queue
 
-Read `documents/bugs.md`. Only entries under `## Open` with `**Status:** open` are candidates — skip `in spec`.
+Use the backlog named in project instructions or decisions. For a file backlog, use open entries under `## Open` in `documents/bugs.md`. For a tracker, read the issues or supplied snapshots. Use their stable identifiers in the spec header and action tags, including the repository or project when ambiguous. Use the tracker's fields and lifecycle for every status update below. Make external changes only within the authorized task. Report unavailable updates as pending and preserve any local index as links only.
 
-the user's request shapes the queue:
+Exclude work already in a spec from new triage. If asked to resume a selected bug whose local spec is missing, check the linked issue, PR or project handoff and use the recovery rules in `../imp/SKILL.md`. An absent local file does not reopen a bug.
+
+Use the user's request to select the queue:
 - **Empty** — all open bugs, max 5 included
 - **A number** (`squash 3`) — all open bugs, max N included
 - **Bug IDs** (`squash B-003 B-007`) — only those bugs, in that order
@@ -67,7 +69,7 @@ Unit tests are out of scope.
 
 ## 4. Mark the bugs
 
-For each included bug, change its `**Status:** open` to `**Status:** in spec` in `documents/bugs.md` so no one picks it up twice.
+For a file backlog, change each included entry from `**Status:** open` to `**Status:** in spec`. For a tracker, apply its documented triage transition if one exists and report any pending update.
 
 ## 5. Hand off
 

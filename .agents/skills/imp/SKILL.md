@@ -9,10 +9,10 @@ Execute the approved scope in small, independently verified iterations. The spec
 
 ## Load and resolve scope
 
-Read `scratchpad/feature-spec.md`, applicable project instructions, relevant project decisions, and touched packages' `DECISIONS.md` files. For a feature spec, read its named roadmap and capability; for a bug spec, read the listed bugs and their repro steps in `documents/bugs.md`.
+Read `scratchpad/feature-spec.md`, applicable project instructions, relevant project decisions, and touched packages' `DECISIONS.md` files. For a feature spec, read its named roadmap and capability. For a bug spec, read its exact IDs and repro steps in the project's authoritative tracker or file backlog.
 
-- If the spec is absent, unresolved, or not approved for execution, explain the missing prerequisite and use `draft-spec` or `squash` as appropriate. Do not invent a plan and implement it.
-- Use the requested item or range. Otherwise start at the first unchecked numbered action item and continue through the current commit group. An explicit single-item request ends after that item.
+- If the local spec is missing on resume, look in the linked issue, PR or tracked project handoff. Restore the approved numbered items, scope, step or bug IDs and checkpoint into `scratchpad/feature-spec.md` (create the directory if needed). Recheck the branch, working tree, completed items and validation evidence before resuming the next unfinished action. If the record lacks the exact approved scope or conflicts with the checkout, ask for the missing details. Use `draft-spec` or `squash` for new planning.
+- Execute only a scope approved for implementation. If the spec already exists but its scope or approval is unresolved, identify the missing decision first. Use the requested item or range. Otherwise start at the first unchecked numbered action item and continue through the current commit group. An explicit single-item request ends after that item.
 - Respect dependencies before jumping to a later item. A checked item is not an instruction to implement it again.
 - On resumption, inspect current files, Git status, and recorded verification before trusting checkboxes. Preserve unrelated user changes.
 - Check whether choices would contradict decisions or obstruct remaining roadmap steps. Resolve substantive conflicts with the developer before coding.

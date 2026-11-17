@@ -33,7 +33,7 @@ For **built behavior**, code is the ground truth: if a doc says X is built and t
 
 From the user's request:
 
-- **Empty → delta.** Read `scratchpad/coherence-report.md`. Its `**Checked through:**` line holds the commit of the last run. If there's no report, say so and ask: run `full`, or give a ref with `since <ref>`? Wait.
+- **Empty → delta.** Read the `**Checked through:**` commit in `scratchpad/coherence-report.md`. If the report or marker is missing, offer a full check or a specific starting ref.
 - **`since <ref>` → delta** from that ref.
 - **`full`** → everything.
 - **A capability name** (matches a file in `documents/capabilities/`) → that capability only.
@@ -45,7 +45,7 @@ From the user's request:
 
 List the affected capabilities. If more than ~5 are affected, suggest `full` instead and ask. If nothing changed, say so and stop.
 
-State the mode and scope before checking. Validate a delta ref with Git before using it. If it is missing or no longer an ancestor of HEAD, request a new baseline or full check. Record `git rev-parse HEAD`. Only advance the global `Checked through` marker after a full check or a complete delta check; a capability-only run preserves the previous marker. Record dirty working-tree scope separately.
+State the mode and scope before checking. Validate that the delta ref is an ancestor of HEAD. Record the observed HEAD and any dirty paths separately. Set the global `Checked through` commit after a completed full check. A completed delta can advance it when the delta covers all changes from the saved marker. Preserve the old marker for capability-only runs, incomplete checks or a `since` range that skips intervening commits. If no marker exists, an explicitly agreed starting ref can establish the baseline for that delta.
 
 ## 2. Structural checks — always run in full
 
@@ -65,7 +65,7 @@ These are cheap, so they cover all docs in every mode.
 
 **S7 DECISIONS.md coverage.** Code packages (directories with source files) and no `DECISIONS.md` → Info.
 
-**S8 Backlogs.** In `documents/bugs.md`: duplicate IDs; entries with `in spec` status when `scratchpad/feature-spec.md` doesn't list them in a `Bugs:` header; closed entries left under `## Open`. Open `blocker` bugs → list them under the current milestone (named in master's `**Current milestone:**` line).
+**S8 Backlogs.** Check the project's authoritative backlog. In a file backlog, look for duplicate IDs and closed entries under `## Open`. With a tracker, follow the linked issues and compare their actual states. Report inaccessible states as unverified. Compare in-progress bugs to the local spec or approved handoff for the relevant branch. A different active spec or missing scratchpad alone does not establish stale status. List confirmed open blockers in the report under the current milestone.
 
 ## 3. Semantic checks
 
