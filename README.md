@@ -10,14 +10,14 @@ Northstar gives a coding project a memory that stays with the code. It provides 
 2. Merge the relevant [starter documents](documents/) and [project instructions](templates/project-instructions.md) into the project and its existing `AGENTS.md`. Keep its real milestones, issues, stack, and checks. Create `scratchpad/` and add `scratchpad/*.md` to its ignore rules. The root `AGENTS.md` in *this* repository is for Northstar maintainers.
 3. Open that **target repository** in Codex. Type `$` in the skill picker and look for **Northstar**. Try `$draft-northstar Help me define who this project is for and what v1 must do.` If you already have a vision, start from the current milestone. A GitHub link in a chat alone does not install anything.
 
-**For several projects, install the skills once as a Codex plugin.** From a checkout of a Northstar revision that includes the catalog, run:
+**For several projects, install the skills once as a Codex plugin.** Run these commands from any directory:
 
 ```sh
-codex plugin marketplace add .
+codex plugin marketplace add GatoFiero/northstar
 codex plugin add northstar@northstar-workflows
 ```
 
-Start a new session **in the project you want to work on** and choose the Northstar skill from the picker. The CLI lists plugin skills with names such as `northstar:draft-northstar`. Use the same per-project documents and instructions from step 2. Plugin installation provides the skills; it does not create project documents, share memory between projects, or grant GitHub access. Choose either route to avoid duplicate entries. For a team that should get a pinned workflow with each clone, prefer repository-local skills. See the official [skills guide](https://learn.chatgpt.com/docs/build-skills) and [plugin packaging guide](https://developers.openai.com/plugins/build/plugins).
+Start a new session **in the project you want to work on** and choose the Northstar skill from the picker. The CLI lists plugin skills with names such as `northstar:draft-northstar`. Use the same per-project documents and instructions from step 2. Each project keeps its own milestones, decisions and handoffs. GitHub workflows use the access available in your session. Choose one installation route per project to avoid duplicate entries. To test a local Northstar checkout, register it with `codex plugin marketplace add .` from its root. See the official [skills guide](https://learn.chatgpt.com/docs/build-skills) and [plugin packaging guide](https://developers.openai.com/plugins/build/plugins).
 
 **Claude Code:** use [`.claude/skills/`](.claude/skills/), merge the project instructions into `CLAUDE.md`, and invoke a skill with `/` instead of `$`. On ChatGPT surfaces with installed skills, use the name shown by the `@` picker. This repository is not a listing in the public plugin directory.
 
